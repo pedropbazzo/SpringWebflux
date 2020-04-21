@@ -60,16 +60,16 @@ Seguindo a abordagem tradicional, teríamos a seguinte implementação:
   @RequestMapping("/pessoas")
   public class PessoaController {
 	  
-	  @Autowired
-	  private PessoaService service;
+      @Autowired
+      private PessoaService service;
+        
+      public Flux<Pessoa> findAll() {
+	return service.findAll();
+      }
 	  
-	  public Flux<Pessoa> findAll() {
-	    return service.findAll();
-	  }
-	  
-	  public Mono<Pessoa> findById(@PathVariable int id) {
-		return service.findById(id);
-	  }
+      public Mono<Pessoa> findById(@PathVariable int id) {
+        return service.findById(id);
+      }
 
   }
 ```
