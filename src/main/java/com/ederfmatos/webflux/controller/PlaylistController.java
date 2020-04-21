@@ -3,11 +3,15 @@ package com.ederfmatos.webflux.controller;
 import com.ederfmatos.webflux.document.Playlist;
 import com.ederfmatos.webflux.services.PlaylistService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
-//@RestController("playlist")
+import java.time.Duration;
+
+@RestController("playlist")
 @RequestMapping("/playlists")
 public class PlaylistController {
 
@@ -33,6 +37,13 @@ public class PlaylistController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Playlist> save(@RequestBody Playlist playlist) {
         return service.save(playlist);
+    }
+
+    @GetMapping(value="/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Tuple2<Long, Playlist>> events(){
+        Flux<Long> interval = Flux.interval(Duration.ofSeconds(2));
+        Flux<Playlist> playlistFlux = service.findAll();
+        return Flux.zip(interval, playlistFlux);
     }
 
 }
